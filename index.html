@@ -2610,42 +2610,7 @@ async function handleListingSubmit(e) {
     alert("Submission failed. Please try again.");
     console.error(error);
   }
-} {
-  e.preventDefault();
-
-  const form = e.target;
-
-  const restaurantName = form.restaurantName.value;
-  const ownerName = form.ownerName.value;
-  const phone = form.phone.value;
-  const sector = form.sector.value;
-  const cuisine = form.cuisine.value;
-  const address = form.address.value;
-
-  try {
-    await fetch("https://script.google.com/macros/s/AKfycbyaN56wTLlmz9J-r5itbuWeE6k183VMfkcZ-61cbxQP3SGsctiQ13ZWJeukLVCp5Mvgww/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        restaurantName,
-        ownerName,
-        phone,
-        sector,
-        cuisine,
-        address
-      })
-    });
-
-    document.getElementById('listingSuccess').classList.add('show');
-    form.reset();
-
-    setTimeout(() => closeListing(), 2200);
-
-  } catch (err) {
-    alert("Submission failed. Please try again.");
-    console.error(err);
-  }
-}
-
+} 
 // ============================================================
 // ADMIN PANEL (Excel Export)
 // ============================================================
