@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KhanaPina ISB — Islamabad ka apna food directory</title>
+<meta name="description" content="Islamabad ka premium restaurant directory. F-6, F-7, F-8, Blue Area aur har sector ke best restaurants — sector-wise discover karein." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   Palette: deep charcoal night sky + warm saffron + electric mint
+   ============================================================ */
+:root {
+  --bg: #0E0A07;
+  --bg-2: #15100B;
+  --bg-3: #1E1812;
+  --surface: #1A140E;
+  --surface-2: #221A12;
+  --line: #2E2419;
+  --line-bright: #3D2F20;
+
+  --ink: #F7F1E8;
+  --ink-soft: #C9BEA9;
+  --ink-mute: #8E826E;
+
+  --saffron: #F2A341;
+  --saffron-deep: #D88420;
+  --mint: #4FD9A8;
+  --crimson: #E84B3C;
+  --gold: #E8C170;
+  --gold-glow: rgba(232, 193, 112, 0.4);
+
+  --font-display: 'Fraunces', 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+
+  --shadow-glow: 0 0 60px rgba(242, 163, 65, 0.15);
+  --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-deep: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+@supports (scroll-behavior: smooth) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Use system cursor when reduced-motion is preferred */
+@media (prefers-reduced-motion: reduce) {
+  body { cursor: auto; }
+  .cursor, .cursor-trail { display: none !important; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+img, svg { display: block; max-width: 100%; }
+
+/* ============================================================
+   CUSTOM CURSOR (mouse-follow)
+   ============================================================ */
+.cursor {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  background: var(--saffron);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: width 0.25s, height 0.25s, background 0.25s;
+}
+.cursor.expand {
+  width: 60px;
+  height: 60px;
+  background: var(--saffron);
+  opacity: 0.5;
+}
+.cursor-trail {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(242, 163, 65, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  .cursor, .cursor-trail { display: none; }
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 18px 0;
+  background: rgba(14, 10, 7, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: padding 0.3s, background 0.3s;
+}
+.nav.scrolled {
+  padding: 12px 0;
+  background: rgba(14, 10, 7, 0.92);
+}
+.nav-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  position: relative;
+  background: radial-gradient(circle at 30% 30%, var(--saffron), var(--saffron-deep));
+  border-radius: 50%;
+  box-shadow: 0 0 24px rgba(242, 163, 65, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-logo::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--bg);
+  border-radius: 50%;
+  top: 6px; left: 6px;
+  opacity: 0.9;
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--saffron) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+}
+.nav-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--saffron);
+  transition: width 0.25s;
+}
+.nav-link:hover { color: var(--saffron); }
+.nav-link:hover::after { width: 100%; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  font-family: var(--font-body);
+}
+.btn-primary {
+  background: var(--saffron);
+  color: var(--bg);
+  box-shadow: 0 6px 24px rgba(242, 163, 65, 0.4);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(242, 163, 65, 0.6);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-bright);
+}
+.btn-ghost:hover {
+  border-color: var(--saffron);
+  color: var(--saffron);
+}
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+}
+.btn-whatsapp:hover {
+  background: #1DA851;
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   HERO with PARALLAX
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  padding: 140px 40px 80px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Parallax layers */
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(242, 163, 65, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 163, 65, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 0;
+}
+.bg-glow {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(242, 163, 65, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(79, 217, 168, 0.12) 0%, transparent 50%);
+  z-index: 1;
+}
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.949 0 0 0 0 0.639 0 0 0 0 0.255 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 2;
+  opacity: 0.5;
+}
+
+.hero-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 980px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--saffron);
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+.eyebrow::before, .eyebrow::after {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--saffron);
+  opacity: 0.5;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 7.5vw, 96px);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+.hero-title em {
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--saffron) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+.hero-sub {
+  font-size: 19px;
+  color: var(--ink-soft);
+  margin-bottom: 36px;
+  max-width: 580px;
+  line-height: 1.6;
+}
+.hero-cta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.hero-stats {
+  display: flex;
+  gap: 56px;
+  flex-wrap: wrap;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--saffron);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* ============================================================
+   3D Interactive Islamabad Map
+   ============================================================ */
+.map-stage {
+  position: relative;
+  perspective: 1500px;
+  height: 540px;
+}
+.map-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(28deg) rotateY(-12deg) rotateZ(2deg);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.map-base {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(242,163,65,0.06), rgba(79,217,168,0.04)),
+    radial-gradient(ellipse at center, rgba(242,163,65,0.1), transparent 70%);
+  border: 1px solid var(--line-bright);
+  border-radius: 16px;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.7),
+    0 0 0 1px rgba(242, 163, 65, 0.08),
+    inset 0 0 80px rgba(242, 163, 65, 0.04);
+  overflow: hidden;
+}
+.map-base::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(242, 163, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 163, 65, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.map-label {
+  position: absolute;
+  top: 20px; left: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.14em;
+}
+.map-label strong { color: var(--saffron); }
+.map-label-coords {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+/* Sectors on the map (positioned absolutely) */
+.sector-node {
+  position: absolute;
+  cursor: none;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sector-blob {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--saffron), var(--saffron-deep));
+  box-shadow:
+    0 0 30px rgba(242, 163, 65, 0.5),
+    0 0 60px rgba(242, 163, 65, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bg);
+  letter-spacing: -0.02em;
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(242, 163, 65, 0.5), 0 0 60px rgba(242, 163, 65, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(242, 163, 65, 0.8), 0 0 80px rgba(242, 163, 65, 0.4); }
+}
+.sector-node[data-sector="F-6"] { top: 35%; left: 22%; width: 70px; height: 70px; }
+.sector-node[data-sector="F-7"] { top: 25%; left: 38%; width: 80px; height: 80px; }
+.sector-node[data-sector="F-8"] { top: 42%; left: 52%; width: 70px; height: 70px; }
+.sector-node[data-sector="Blue Area"] { top: 58%; left: 32%; width: 95px; height: 60px; border-radius: 30px; }
+.sector-node[data-sector="Blue Area"] .sector-blob { border-radius: 30px; background: radial-gradient(ellipse at 30% 30%, #6FA8E8, #2E6FBA); box-shadow: 0 0 30px rgba(46, 111, 186, 0.6), 0 0 60px rgba(46, 111, 186, 0.3); }
+.sector-node[data-sector="Blue Area"] .sector-blob { animation-name: pulse-blue; }
+@keyframes pulse-blue {
+  0%, 100% { box-shadow: 0 0 30px rgba(46, 111, 186, 0.6), 0 0 60px rgba(46, 111, 186, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(46, 111, 186, 0.9), 0 0 80px rgba(46, 111, 186, 0.5); }
+}
+
+.sector-node:hover { transform: translateZ(40px) scale(1.1); }
+
+/* Hover reveal panel */
+.sector-popup {
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+  width: 280px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-bright);
+  border-radius: 14px;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  z-index: 50;
+}
+.sector-node:hover .sector-popup {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+.sector-popup-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--saffron);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.sector-popup-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.sector-popup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popup-restaurant {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--bg-3);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.popup-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--bg);
+}
+.popup-info {
+  flex: 1;
+  min-width: 0;
+}
+.popup-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.popup-rating {
+  font-size: 11px;
+  color: var(--saffron);
+  font-weight: 600;
+}
+
+.map-instruction {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   GENERIC SECTION STYLES
+   ============================================================ */
+.section {
+  padding: 120px 40px;
+  position: relative;
+}
+.section-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+}
+.section-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 64px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 880px) {
+  .section-header { grid-template-columns: 1fr; gap: 24px; }
+  .section { padding: 80px 24px; }
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.section-title em {
+  font-style: italic;
+  color: var(--saffron);
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 480px;
+  justify-self: end;
+}
+
+/* ============================================================
+   AUTH GATE (Login wall)
+   ============================================================ */
+.gate {
+  position: relative;
+  text-align: center;
+  padding: 80px 40px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
+  border-radius: 24px;
+  border: 1px solid var(--line-bright);
+  max-width: 720px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.gate::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(242, 163, 65, 0.08) 0%, transparent 50%);
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.gate-content {
+  position: relative;
+  z-index: 1;
+}
+.gate-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+}
+.gate-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 500;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.gate-title em { color: var(--saffron); font-style: italic; }
+.gate-desc {
+  color: var(--ink-soft);
+  font-size: 16px;
+  margin-bottom: 32px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+.gate-cta-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Restaurant section blurred while not logged in */
+.restaurant-section {
+  position: relative;
+  transition: filter 0.5s;
+}
+.restaurant-section.locked {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ============================================================
+   RESTAURANT CARDS WITH 3D HOVER
+   ============================================================ */
+.restaurants {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+  perspective: 1500px;
+}
+.r-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: none;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s, border-color 0.4s;
+  transform-style: preserve-3d;
+}
+.r-card:hover {
+  transform: translateY(-8px) rotateX(2deg);
+  border-color: var(--saffron);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(242, 163, 65, 0.3),
+    var(--shadow-glow);
+}
+.r-image {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.r-image-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.7);
+  transition: transform 0.6s, filter 0.4s;
+}
+.r-card:hover .r-image-bg {
+  transform: scale(1.08);
+  filter: brightness(0.85);
+}
+.r-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, var(--surface) 100%);
+}
+.r-mark {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: 80px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--saffron);
+  opacity: 0.9;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.r-premium {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: linear-gradient(135deg, var(--gold) 0%, #C49A4E 100%);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  z-index: 3;
+  box-shadow: 0 4px 16px rgba(232, 193, 112, 0.4);
+}
+.r-body { padding: 22px; }
+.r-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.r-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.r-sector {
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  color: var(--saffron);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.r-cuisine {
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+}
+.r-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.r-rating { color: var(--saffron); font-weight: 700; }
+.r-price { color: var(--mint); font-family: var(--font-display); font-weight: 600; }
+.r-phone-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-mute);
+  font-size: 12px;
+  font-style: italic;
+}
+.r-phone-lock svg { width: 12px; height: 12px; }
+
+.r-features {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.feat {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--bg-3);
+  color: var(--ink-mute);
+  padding: 4px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--line);
+}
+
+/* ============================================================
+   FILTER BAR
+   ============================================================ */
+.filters {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 48px;
+}
+.filter-group { margin-bottom: 22px; }
+.filter-group:last-child { margin-bottom: 0; }
+.filter-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-input {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 14px 16px 14px 46px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--ink-mute); }
+.search-input:focus { outline: none; border-color: var(--saffron); }
+.search-icon-svg {
+  position: absolute;
+  left: 16px;
+  width: 18px; height: 18px;
+  color: var(--ink-mute);
+}
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pill {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: none;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.pill:hover { border-color: var(--saffron); color: var(--saffron); }
+.pill.active {
+  background: var(--saffron);
+  color: var(--bg);
+  border-color: var(--saffron);
+  font-weight: 600;
+}
+.filter-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.results-count { color: var(--ink-soft); font-size: 13px; }
+.results-count strong { color: var(--saffron); font-weight: 700; }
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--crimson);
+  cursor: none;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============================================================
+   CEO SECTION
+   ============================================================ */
+.ceo-section {
+  background:
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  padding: 140px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.ceo-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+@media (max-width: 880px) {
+  .ceo-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+.ceo-portrait {
+  aspect-ratio: 3/4;
+  background:
+    linear-gradient(135deg, rgba(242,163,65,0.2) 0%, rgba(79,217,168,0.1) 100%),
+    var(--surface);
+  border-radius: 20px;
+  border: 1px solid var(--line-bright);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ceo-monogram {
+  font-family: var(--font-display);
+  font-size: 200px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--saffron) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  opacity: 0.95;
+}
+.ceo-portrait::after {
+  content: 'CEO PORTRAIT';
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.16em;
+}
+.ceo-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--saffron);
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.ceo-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--saffron);
+}
+.ceo-name {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.ceo-role {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--saffron);
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.ceo-bio {
+  font-size: 17px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+.ceo-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 36px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.cred-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.cred-num {
+  font-family: var(--font-mono);
+  color: var(--saffron);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  min-width: 24px;
+}
+.cred-text {
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cred-text strong { color: var(--ink); font-weight: 600; }
+.ceo-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   MODAL (Login / Signup / Restaurant detail)
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 5, 3, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px;
+  overflow-y: auto;
+  animation: fadeIn 0.3s;
+}
+.modal-backdrop.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--line-bright);
+  border-radius: 24px;
+  max-width: 560px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: var(--shadow-deep);
+  animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+}
+.modal.modal-large { max-width: 920px; }
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 40px; height: 40px;
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  border-radius: 50%;
+  cursor: none;
+  font-size: 18px;
+  color: var(--ink);
+  z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: var(--saffron); color: var(--bg); }
+.modal-body {
+  padding: 48px;
+}
+.modal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--saffron);
+  margin-bottom: 14px;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.modal-sub {
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin-bottom: 32px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.form-row.full { grid-template-columns: 1fr; }
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 7px;
+  letter-spacing: 0.04em;
+}
+.form-input, .form-select, .form-textarea {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--ink-mute); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--saffron);
+}
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-submit {
+  background: var(--saffron);
+  color: var(--bg);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: none;
+  font-family: var(--font-body);
+  width: 100%;
+  margin-top: 8px;
+  transition: all 0.25s;
+  letter-spacing: 0.02em;
+}
+.form-submit:hover {
+  background: var(--saffron-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(242, 163, 65, 0.4);
+}
+.form-toggle {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--ink-mute);
+  font-size: 13px;
+}
+.form-toggle a {
+  color: var(--saffron);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: none;
+}
+.form-error {
+  background: rgba(232, 75, 60, 0.1);
+  border: 1px solid rgba(232, 75, 60, 0.3);
+  color: var(--crimson);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.form-error.show { display: block; }
+.form-success {
+  background: rgba(79, 217, 168, 0.1);
+  border: 1px solid rgba(79, 217, 168, 0.3);
+  color: var(--mint);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.form-success.show { display: block; }
+
+/* Restaurant detail modal */
+.modal-hero {
+  height: 240px;
+  background: linear-gradient(135deg, rgba(242,163,65,0.2) 0%, rgba(79,217,168,0.05) 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-hero-mark {
+  font-family: var(--font-display);
+  font-size: 110px;
+  font-style: italic;
+  color: var(--saffron);
+  opacity: 0.9;
+}
+.modal-meta-row {
+  display: flex;
+  gap: 28px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.meta-block-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.meta-block-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.modal-section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 28px 0 16px;
+  letter-spacing: -0.01em;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.info-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.info-card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.info-card-value {
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.info-card-value a { color: var(--saffron); text-decoration: none; }
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.menu-item {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+}
+.menu-item-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--ink); }
+.menu-item-price {
+  color: var(--saffron);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+}
+.menu-item-desc { font-size: 12px; color: var(--ink-mute); margin-top: 4px; }
+.modal-map {
+  width: 100%;
+  height: 280px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-3);
+}
+.modal-map iframe { width: 100%; height: 100%; border: 0; }
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.modal-actions .btn { flex: 1; min-width: 140px; }
+
+/* ============================================================
+   ADMIN PANEL (Export to Excel)
+   ============================================================ */
+.admin-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px; height: 56px;
+  background: var(--surface);
+  border: 1px solid var(--line-bright);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  z-index: 90;
+  box-shadow: var(--shadow-card);
+  transition: all 0.25s;
+}
+.admin-fab:hover {
+  background: var(--saffron);
+  transform: scale(1.1) rotate(15deg);
+}
+.admin-fab svg {
+  width: 22px; height: 22px;
+  color: var(--ink);
+  transition: color 0.2s;
+}
+.admin-fab:hover svg { color: var(--bg); }
+
+.admin-panel {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 36px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.admin-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.admin-stat {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+.admin-stat-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--saffron);
+  line-height: 1;
+}
+.admin-stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.admin-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.admin-users-table th, .admin-users-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.admin-users-table th {
+  background: var(--bg-2);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.admin-users-table tr:hover td { background: var(--bg-2); }
+.admin-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background: var(--bg-2);
+  padding: 80px 40px 40px;
+  border-top: 1px solid var(--line);
+}
+.footer-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 60px;
+}
+.footer-brand { max-width: 380px; }
+.footer-brand p {
+  color: var(--ink-mute);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 16px;
+}
+.footer h5 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.footer ul { list-style: none; }
+.footer li { margin-bottom: 10px; }
+.footer a {
+  color: var(--ink-mute);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+  cursor: none;
+}
+.footer a:hover { color: var(--saffron); }
+.footer-bottom {
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--ink-mute);
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .footer { padding: 56px 24px 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+/* WhatsApp floating */
+.whatsapp-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: #25D366;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 90;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+  cursor: none;
+  transition: transform 0.25s;
+}
+.whatsapp-fab:hover { transform: scale(1.05); }
+.whatsapp-fab svg { width: 18px; height: 18px; }
+
+@media (max-width: 600px) {
+  .whatsapp-fab { padding: 12px 16px; font-size: 13px; bottom: 80px; }
+}
+
+/* ============================================================
+   USER PILL (logged in indicator)
+   ============================================================ */
+.user-pill {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--line-bright);
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: none;
+}
+.user-pill.show { display: inline-flex; }
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--saffron), var(--saffron-deep));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 12px;
+}
+.user-name { max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logout-btn {
+  background: none;
+  border: none;
+  color: var(--crimson);
+  cursor: none;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  font-family: var(--font-body);
+}
+
+@media (max-width: 768px) {
+  .nav-links { gap: 16px; }
+  .nav-link:not(.btn):not(.user-pill) { display: none; }
+  .map-stage { height: 400px; }
+  .sector-popup { display: none; }
+  .modal-body { padding: 32px 24px; }
+  .modal-title { font-size: 28px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+<!-- ============================================================ NAV ============================================================ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <div class="brand-logo"></div>
+      <div class="brand-text">
+        <span class="brand-name">KhanaPina ISB</span>
+        <span class="brand-tag">Islamabad ka apna food directory</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#discover" class="nav-link">Discover</a>
+      <a href="#ceo" class="nav-link">About CEO</a>
+      <a href="#" class="nav-link" onclick="openListingModal(); return false;">List Restaurant</a>
+      <div class="user-pill" id="userPill">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName"></span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+      <button class="btn btn-primary" id="loginBtn" onclick="openAuth('login')">Login</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ HERO ============================================================ -->
+<section class="hero">
+  <div class="parallax-layer bg-grid" data-parallax-speed="0.3"></div>
+  <div class="parallax-layer bg-glow" data-parallax-speed="0.5"></div>
+  <div class="parallax-layer bg-noise"></div>
+
+  <div class="hero-inner">
+    <div data-parallax-speed="0.8">
+      <div class="eyebrow">F-6 · F-7 · F-8 · Blue Area · &amp; more</div>
+      <h1 class="hero-title">Islamabad ka apna <em>food directory.</em></h1>
+      <p class="hero-sub">Har sector ke best restaurants, cafés, BBQ joints aur ice-cream spots ek hi jagah. Filter by sector, cuisine, price, halal status — sab kuch ek tap par.</p>
+      <div class="hero-cta-row">
+        <button class="btn btn-primary" onclick="openAuth('signup')">
+          Create free account →
+        </button>
+        <a href="#map" class="btn btn-ghost">Explore the map</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num" data-count="18">18</span>
+          <span class="stat-label">Restaurants Listed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" data-count="17">17</span>
+          <span class="stat-label">Sectors Covered</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" data-count="12">12</span>
+          <span class="stat-label">Cuisine Types</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Interactive Islamabad Map -->
+    <div class="map-stage" id="map" data-parallax-speed="0.6">
+      <div class="map-3d" id="map3d">
+        <div class="map-base">
+          <div class="map-label">ISLAMABAD · CAPITAL TERRITORY</div>
+          <div class="map-label-coords">33.6844°N · 73.0479°E</div>
+
+          <!-- Sector nodes -->
+          <div class="sector-node" data-sector="F-6">
+            <div class="sector-blob">F-6</div>
+            <div class="sector-popup">
+              <div class="sector-popup-title">F-6</div>
+              <div class="sector-popup-meta">3 RESTAURANTS · SUPER MARKET</div>
+              <div class="sector-popup-list" id="popup-F-6"></div>
+            </div>
+          </div>
+          <div class="sector-node" data-sector="F-7">
+            <div class="sector-blob">F-7</div>
+            <div class="sector-popup">
+              <div class="sector-popup-title">F-7</div>
+              <div class="sector-popup-meta">6 RESTAURANTS · JINNAH SUPER</div>
+              <div class="sector-popup-list" id="popup-F-7"></div>
+            </div>
+          </div>
+          <div class="sector-node" data-sector="F-8">
+            <div class="sector-blob">F-8</div>
+            <div class="sector-popup">
+              <div class="sector-popup-title">F-8</div>
+              <div class="sector-popup-meta">2 RESTAURANTS · AYUB MARKET</div>
+              <div class="sector-popup-list" id="popup-F-8"></div>
+            </div>
+          </div>
+          <div class="sector-node" data-sector="Blue Area">
+            <div class="sector-blob">Blue Area</div>
+            <div class="sector-popup">
+              <div class="sector-popup-title">Blue Area</div>
+              <div class="sector-popup-meta">CITY CENTER · BUSINESS DISTRICT</div>
+              <div class="sector-popup-list" id="popup-Blue-Area"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="map-instruction">↑ Hover over a sector to peek inside ↑</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DISCOVER (RESTAURANT LISTING) ============================================================ -->
+<section class="section" id="discover">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title">The <em>list.</em></h2>
+      <p class="section-desc">Discover every restaurant worth visiting in Islamabad. Filter by sector, cuisine, price, and what matters to you.</p>
+    </div>
+
+    <!-- AUTH GATE (shown when not logged in) -->
+    <div class="gate" id="authGate">
+      <div class="gate-content">
+        <div class="gate-icon">🔒</div>
+        <h3 class="gate-title">Login karein <em>aur explore karein</em></h3>
+        <p class="gate-desc">Restaurants ki full list, menus, locations aur contact details dekhne ke liye apna free account banayein. Sirf 30 second lagte hain.</p>
+        <div class="gate-cta-row">
+          <button class="btn btn-primary" onclick="openAuth('signup')">Free account banayein</button>
+          <button class="btn btn-ghost" onclick="openAuth('login')">Already have an account? Login</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters + restaurants (hidden until login) -->
+    <div class="restaurant-section locked" id="restaurantSection">
+      <div class="filters">
+        <div class="filter-group">
+          <label class="filter-label">Search</label>
+          <div class="search-wrap">
+            <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Restaurant ka naam, dish, ya sector search karein…">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Sector</label>
+          <div class="pill-row" id="sectorPills"></div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Cuisine</label>
+          <div class="pill-row" id="cuisinePills"></div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Features</label>
+          <div class="pill-row" id="featurePills">
+            <button class="pill" data-feature="halal">🌙 Halal</button>
+            <button class="pill" data-feature="family">👨‍👩‍👧 Family</button>
+            <button class="pill" data-feature="parking">🅿️ Parking</button>
+            <button class="pill" data-feature="delivery">🛵 Delivery</button>
+            <button class="pill" data-feature="outdoor">🌳 Outdoor</button>
+            <button class="pill" data-feature="prayer">🕌 Prayer area</button>
+          </div>
+        </div>
+        <div class="filter-meta">
+          <div class="results-count">Showing <strong id="resultCount">0</strong> restaurants</div>
+          <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+        </div>
+      </div>
+
+      <div class="restaurants" id="resultsGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CEO SECTION ============================================================ -->
+<section class="ceo-section" id="ceo">
+  <div class="ceo-inner">
+    <div class="ceo-portrait">
+      <div class="ceo-monogram">DS</div>
+    </div>
+    <div>
+      <div class="ceo-eyebrow">Founder &amp; CEO</div>
+      <h2 class="ceo-name">Danyal Shakoor</h2>
+      <div class="ceo-role">Design Field &amp; Corporate Industry Researcher</div>
+      <p class="ceo-bio">Danyal Shakoor brings years of design-field expertise and corporate-industry research to the KhanaPina ISB platform. The product is built on careful observation of how Islamabad's residents actually search for food — by sector, by occasion, by mood — and engineered to match that real behavior, not generic templates copied from abroad.</p>
+      <div class="ceo-credentials">
+        <div class="cred-item">
+          <span class="cred-num">01</span>
+          <div class="cred-text"><strong>Design-field leadership</strong> across multiple high-profile projects in Islamabad and Rawalpindi.</div>
+        </div>
+        <div class="cred-item">
+          <span class="cred-num">02</span>
+          <div class="cred-text"><strong>Corporate industry research</strong> with hands-on involvement in standards, workflows, and operational excellence.</div>
+        </div>
+        <div class="cred-item">
+          <span class="cred-num">03</span>
+          <div class="cred-text"><strong>Founder of Archi Solutionz</strong> — an Islamabad-based design and consultation studio serving private and corporate clients.</div>
+        </div>
+        <div class="cred-item">
+          <span class="cred-num">04</span>
+          <div class="cred-text"><strong>Founder of NextGen Learning Hub</strong> — an education initiative focused on practical, future-ready skills in I-14, Islamabad.</div>
+        </div>
+      </div>
+      <div class="ceo-cta-row">
+        <a href="https://wa.me/923305810141" target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A12 12 0 0 0 3.48 20.52L2 22l1.48-1.48A12 12 0 0 0 22 12a12 12 0 0 0-1.48-8.52zM12 20a8 8 0 0 1-4.07-1.11l-.29-.17-3.01.99.99-3.01-.17-.29A8 8 0 1 1 12 20zm4.4-5.83c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/></svg>
+          WhatsApp: 0330 5810141
+        </a>
+        <a href="mailto:hello@khanapina.pk" class="btn btn-ghost">hello@khanapina.pk</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FOOTER ============================================================ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <div class="brand-logo"></div>
+          <div class="brand-text">
+            <span class="brand-name">KhanaPina ISB</span>
+          </div>
+        </a>
+        <p>Islamabad's sector-by-sector restaurant directory. Curated, independent, and built for locals — by people who live here.</p>
+      </div>
+      <div>
+        <h5>Discover</h5>
+        <ul>
+          <li><a href="#" onclick="setSector('F-6'); return false;">F-6 restaurants</a></li>
+          <li><a href="#" onclick="setSector('F-7'); return false;">F-7 restaurants</a></li>
+          <li><a href="#" onclick="setSector('F-8'); return false;">F-8 restaurants</a></li>
+          <li><a href="#" onclick="setSector('Blue Area'); return false;">Blue Area</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>For business</h5>
+        <ul>
+          <li><a href="#" onclick="openListingModal();return false;">List your restaurant</a></li>
+          <li><a href="#" onclick="openListingModal();return false;">Premium listing</a></li>
+          <li><a href="#" onclick="openListingModal();return false;">Advertising</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="https://wa.me/923305810141" target="_blank" rel="noopener">WhatsApp: 0330 5810141</a></li>
+          <li><a href="mailto:hello@khanapina.pk">hello@khanapina.pk</a></li>
+          <li><a href="#">Islamabad, Pakistan</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 KhanaPina ISB. Built in Islamabad with care.</div>
+      <div>A project by Danyal Shakoor</div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/923305810141?text=Hi%2C%20I%20have%20a%20query%20about%20KhanaPina%20ISB" target="_blank" rel="noopener" class="whatsapp-fab" title="WhatsApp us">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A12 12 0 0 0 3.48 20.52L2 22l1.48-1.48A12 12 0 0 0 22 12a12 12 0 0 0-1.48-8.52zM12 20a8 8 0 0 1-4.07-1.11l-.29-.17-3.01.99.99-3.01-.17-.29A8 8 0 1 1 12 20z"/></svg>
+  Query? WhatsApp
+</a>
+
+<!-- Admin FAB -->
+<button class="admin-fab" onclick="openAdmin()" title="Admin panel — Export users to Excel">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+</button>
+
+<!-- ============================================================ AUTH MODAL ============================================================ -->
+<div class="modal-backdrop" id="authModal" onclick="if(event.target===this) closeAuth()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-body">
+      <div class="modal-eyebrow" id="authEyebrow">Welcome</div>
+      <h3 class="modal-title" id="authTitle">Login to KhanaPina ISB</h3>
+      <p class="modal-sub" id="authSub">Apne account mein login karein restaurants explore karne ke liye.</p>
+
+      <div class="form-error" id="authError"></div>
+      <div class="form-success" id="authSuccess"></div>
+
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <!-- Signup-only fields -->
+        <div id="signupFields" style="display:none;">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" name="name" placeholder="Aap ka naam">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" name="phone" placeholder="03XX-XXXXXXX">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-field">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" name="username" placeholder="aap_ka_username" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" name="password" placeholder="••••••••" required minlength="4">
+          </div>
+        </div>
+
+        <button type="submit" class="form-submit" id="authSubmitBtn">Login</button>
+      </form>
+
+      <div class="form-toggle">
+        <span id="authToggleText">New here?</span>
+        <a href="#" onclick="toggleAuthMode(event)" id="authToggleLink">Create an account →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ RESTAURANT DETAIL MODAL ============================================================ -->
+<div class="modal-backdrop" id="detailModal" onclick="if(event.target===this) closeDetail()">
+  <div class="modal modal-large">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div class="modal-hero">
+      <div class="modal-hero-mark" id="dMark">K</div>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:8px;">
+        <div>
+          <h3 class="modal-title" id="dName"></h3>
+          <p class="modal-sub" id="dCuisine"></p>
+        </div>
+        <div class="r-sector" id="dSector" style="font-size:14px; padding: 6px 12px;"></div>
+      </div>
+
+      <div class="modal-meta-row" id="dMeta"></div>
+
+      <h4 class="modal-section-title">Information</h4>
+      <div class="info-grid" id="dInfo"></div>
+
+      <h4 class="modal-section-title">Menu highlights</h4>
+      <div class="menu-grid" id="dMenu"></div>
+
+      <h4 class="modal-section-title">Location</h4>
+      <div class="modal-map">
+        <iframe id="dMap" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div class="modal-actions" id="dActions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ LISTING REQUEST MODAL ============================================================ -->
+<div class="modal-backdrop" id="listingModal" onclick="if(event.target===this) closeListing()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeListing()">✕</button>
+    <div class="modal-body">
+      <div class="modal-eyebrow">For Restaurant Owners</div>
+      <h3 class="modal-title">List your restaurant</h3>
+      <p class="modal-sub">Apne restaurant ko KhanaPina ISB par list karwane ke liye yeh form fill karein. Hum 1 business day mein contact karenge.</p>
+
+      <div class="form-success" id="listingSuccess">✓ Shukria! Hum jald hi aap se contact karenge.</div>
+
+      <form onsubmit="handleListingSubmit(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" name="ownerName" required>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Restaurant Name</label>
+            <input type="text" class="form-input" name="restaurantName" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Phone (WhatsApp)</label>
+            <input type="tel" class="form-input" name="phone" required>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Sector</label>
+            <input type="text" class="form-input" name="sector" placeholder="e.g. F-7" required>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-field">
+            <label class="form-label">Plan</label>
+            <select class="form-select" name="cuisine" required>
+              <option>Basic — Free</option>
+              <option>Premium — PKR 4,500 / month</option>
+              <option>Spotlight — PKR 12,000 / month</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-field">
+            <label class="form-label">Notes</label>
+            <textarea class="form-textarea" name="address" placeholder="Cuisine, hours, anything we should know…"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Submit listing request</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ ADMIN MODAL ============================================================ -->
+<div class="modal-backdrop" id="adminModal" onclick="if(event.target===this) closeAdmin()">
+  <div class="modal modal-large">
+    <button class="modal-close" onclick="closeAdmin()">✕</button>
+    <div class="modal-body">
+      <div class="admin-panel">
+        <div class="modal-eyebrow">Admin Panel</div>
+        <h3 class="modal-title">User Registrations</h3>
+        <p class="modal-sub">Sab registered users ka data niche hai. Excel mein download karne ke liye button daba dein.</p>
+
+        <div class="admin-stat-row">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statUsers">0</div>
+            <div class="admin-stat-label">Total Users</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statToday">0</div>
+            <div class="admin-stat-label">Joined Today</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="statWeek">0</div>
+            <div class="admin-stat-label">This Week</div>
+          </div>
+        </div>
+
+        <div id="adminTableWrap">
+          <table class="admin-users-table" id="adminTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Phone</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+        <div class="admin-empty" id="adminEmpty">No users registered yet. Pehla user signup karwa kar test karein.</div>
+
+        <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="exportToExcel()" style="flex:1;">
+            ⬇ Download as Excel (CSV)
+          </button>
+          <button class="btn btn-ghost" onclick="clearAllUsers()">Clear all users</button>
+        </div>
+
+        <p style="margin-top:20px; color:var(--ink-mute); font-size:12px; line-height:1.6;">
+          <strong style="color: var(--crimson);">⚠ Important security note:</strong> Yeh demo browser ke local storage mein data store karta hai. Real production ke liye Firebase Auth ya Supabase use karein — passwords plain text mein NEVER store karne chahiyein. Detailed guide README.md mein hai.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const SECTORS_ALL = ['F-6','F-7','F-8','Blue Area','F-10','G-9','DHA','Saidpur','Pir Sohawa'];
+const CUISINES = ['Desi','BBQ','Fast Food','Italian','Chinese','Continental','Cafe','Ice Cream','Bakery','Healthy','Afghani','Pizza'];
+
+const RESTAURANTS = [
+  { id:1, name:"Monal", sector:"Pir Sohawa", cuisine:"Desi, BBQ, Continental", primaryCuisine:"Desi", price:"$$$", rating:4.5, premium:true, address:"Pir Sohawa Road, Margalla Hills", phone:"+92 51 2615555", hours:"12:00 PM – 11:30 PM", delivery:"Foodpanda", features:["halal","family","parking","outdoor","prayer"], mapsQuery:"Monal Restaurant Pir Sohawa Islamabad", mark:"M",
+    menu:[{name:"Mutton Karahi (Full)",price:"PKR 3,400",desc:"Slow-cooked signature"},{name:"Chicken Tikka (Half)",price:"PKR 1,200",desc:"Charcoal grilled"},{name:"Sajji Special",price:"PKR 2,800",desc:"Whole leg"},{name:"Naan",price:"PKR 80",desc:"Tandoor fresh"}] },
+  { id:2, name:"Tuscany Courtyard", sector:"F-7", cuisine:"Italian, Continental", primaryCuisine:"Italian", price:"$$$", rating:4.6, premium:true, address:"F-7 Markaz, Islamabad", phone:"+92 51 2655555", hours:"12:00 PM – 12:00 AM", delivery:"Foodpanda, Cheetay", features:["halal","family","parking","outdoor"], mapsQuery:"Tuscany Courtyard F-7 Islamabad", mark:"T",
+    menu:[{name:"Wood-Fired Margherita",price:"PKR 1,650",desc:"Buffalo mozzarella, basil"},{name:"Truffle Risotto",price:"PKR 2,400",desc:"Carnaroli rice, parmesan"},{name:"Tiramisu",price:"PKR 850",desc:""},{name:"Mushroom Soup",price:"PKR 650",desc:""}] },
+  { id:3, name:"Kabul Restaurant", sector:"F-6", cuisine:"Afghani, BBQ", primaryCuisine:"Afghani", price:"$$", rating:4.4, premium:false, address:"F-6 Super Market, Islamabad", phone:"+92 51 2876543", hours:"11:00 AM – 11:30 PM", delivery:"Foodpanda", features:["halal","family","prayer"], mapsQuery:"Kabul Restaurant F-6 Super Market Islamabad", mark:"K",
+    menu:[{name:"Mantu",price:"PKR 950",desc:"Steamed beef dumplings"},{name:"Kabuli Pulao",price:"PKR 1,400",desc:""},{name:"Chapli Kebab (4)",price:"PKR 850",desc:""},{name:"Afghani Naan",price:"PKR 120",desc:""}] },
+  { id:4, name:"Street 1 Café", sector:"F-7", cuisine:"Cafe, Continental", primaryCuisine:"Cafe", price:"$$", rating:4.5, premium:true, address:"Street 1, F-7/3, Islamabad", phone:"+92 51 2611100", hours:"8:00 AM – 12:00 AM", delivery:"Foodpanda", features:["halal","family","outdoor"], mapsQuery:"Street 1 Cafe F-7 Islamabad", mark:"S",
+    menu:[{name:"Eggs Benedict",price:"PKR 1,150",desc:"Brunch favorite"},{name:"Smoked Chicken Panini",price:"PKR 950",desc:""},{name:"Espresso Double",price:"PKR 380",desc:""},{name:"Lava Cake",price:"PKR 650",desc:""}] },
+  { id:5, name:"Khiva", sector:"F-7", cuisine:"Continental, Mediterranean", primaryCuisine:"Continental", price:"$$$", rating:4.7, premium:true, address:"F-7 Markaz, Islamabad", phone:"+92 51 2655599", hours:"12:00 PM – 12:00 AM", delivery:"Foodpanda", features:["halal","family","parking"], mapsQuery:"Khiva Restaurant F-7 Islamabad", mark:"K",
+    menu:[{name:"Lamb Shank",price:"PKR 3,200",desc:"Slow-braised 6 hours"},{name:"Grilled Salmon",price:"PKR 2,900",desc:"Norwegian fillet"},{name:"Med Platter",price:"PKR 2,400",desc:""},{name:"Crème Brûlée",price:"PKR 950",desc:""}] },
+  { id:6, name:"Savour Foods", sector:"F-10", cuisine:"Desi, Pulao", primaryCuisine:"Desi", price:"$", rating:4.3, premium:false, address:"F-10 Markaz, Islamabad", phone:"+92 51 2294111", hours:"11:00 AM – 10:30 PM", delivery:"Foodpanda", features:["halal","family","parking","delivery"], mapsQuery:"Savour Foods F-10 Markaz Islamabad", mark:"S",
+    menu:[{name:"Chicken Pulao",price:"PKR 480",desc:"Signature dish"},{name:"Mutton Pulao",price:"PKR 750",desc:""},{name:"Boti Tikka",price:"PKR 650",desc:""},{name:"Lassi",price:"PKR 180",desc:""}] },
+  { id:7, name:"Howdy", sector:"F-6", cuisine:"Fast Food, Burgers", primaryCuisine:"Fast Food", price:"$$", rating:4.2, premium:false, address:"F-6 Markaz, Islamabad", phone:"+92 51 8439111", hours:"12:00 PM – 1:00 AM", delivery:"Foodpanda, Cheetay", features:["halal","family","delivery","parking"], mapsQuery:"Howdy F-6 Markaz Islamabad", mark:"H",
+    menu:[{name:"Howdy Special",price:"PKR 850",desc:"Double patty, signature sauce"},{name:"BBQ Bacon Burger",price:"PKR 950",desc:""},{name:"Loaded Fries",price:"PKR 550",desc:""},{name:"Milkshake",price:"PKR 420",desc:""}] },
+  { id:8, name:"Burning Brownie", sector:"F-7", cuisine:"Cafe, Bakery, Desserts", primaryCuisine:"Bakery", price:"$$", rating:4.6, premium:false, address:"F-7 Markaz, Jinnah Super", phone:"+92 51 2652211", hours:"10:00 AM – 12:00 AM", delivery:"Foodpanda", features:["family","outdoor","halal"], mapsQuery:"Burning Brownie F-7 Jinnah Super Islamabad", mark:"B",
+    menu:[{name:"Burning Brownie",price:"PKR 580",desc:"Warm, with ice cream"},{name:"Red Velvet",price:"PKR 450",desc:""},{name:"Hot Chocolate",price:"PKR 380",desc:""},{name:"Cheesecake",price:"PKR 520",desc:""}] },
+  { id:9, name:"Chaaye Khana", sector:"F-7", cuisine:"Cafe, Desi", primaryCuisine:"Cafe", price:"$$", rating:4.4, premium:true, address:"F-7 Markaz, Islamabad", phone:"+92 51 2659876", hours:"8:00 AM – 12:00 AM", delivery:"Foodpanda", features:["halal","family","outdoor","parking"], mapsQuery:"Chaaye Khana F-7 Islamabad", mark:"C",
+    menu:[{name:"Karak Chai",price:"PKR 280",desc:"House blend"},{name:"Anda Paratha",price:"PKR 380",desc:""},{name:"Mutton Nihari",price:"PKR 850",desc:""},{name:"Kashmiri Chai",price:"PKR 350",desc:""}] },
+  { id:10, name:"Ginyaki", sector:"F-6", cuisine:"Japanese, Asian", primaryCuisine:"Chinese", price:"$$$", rating:4.5, premium:true, address:"F-6 Markaz, Islamabad", phone:"+92 51 2877777", hours:"12:00 PM – 11:30 PM", delivery:"Foodpanda", features:["halal","family","parking"], mapsQuery:"Ginyaki F-6 Islamabad", mark:"G",
+    menu:[{name:"Chicken Teppanyaki",price:"PKR 1,850",desc:"Live grill"},{name:"Sushi Platter",price:"PKR 2,400",desc:"16 pcs"},{name:"Beef Yakisoba",price:"PKR 1,650",desc:""},{name:"Miso Soup",price:"PKR 350",desc:""}] },
+  { id:11, name:"Hot Spot", sector:"F-7", cuisine:"Ice Cream, Desserts", primaryCuisine:"Ice Cream", price:"$$", rating:4.5, premium:false, address:"F-7 Markaz, Islamabad", phone:"+92 51 2654433", hours:"11:00 AM – 1:00 AM", delivery:"Foodpanda", features:["family","outdoor","halal"], mapsQuery:"Hot Spot F-7 Islamabad", mark:"H",
+    menu:[{name:"Cold Stone Ice Cream",price:"PKR 580",desc:"Custom mix"},{name:"Waffle + Ice Cream",price:"PKR 720",desc:""},{name:"Brownie Sundae",price:"PKR 650",desc:""},{name:"Milkshake",price:"PKR 480",desc:""}] },
+  { id:12, name:"Andaaz", sector:"Saidpur", cuisine:"Desi, BBQ", primaryCuisine:"Desi", price:"$$$", rating:4.6, premium:true, address:"Saidpur Village, Islamabad", phone:"+92 51 2611011", hours:"12:00 PM – 11:00 PM", delivery:"—", features:["halal","family","parking","outdoor","prayer"], mapsQuery:"Andaaz Restaurant Saidpur Village Islamabad", mark:"A",
+    menu:[{name:"Mutton Karahi",price:"PKR 3,200",desc:"Clay pot"},{name:"Seekh Kebab",price:"PKR 950",desc:""},{name:"Paya",price:"PKR 1,400",desc:"Friday special"},{name:"Roghni Naan",price:"PKR 120",desc:""}] },
+  { id:13, name:"Cafe Flo", sector:"F-7", cuisine:"French, Continental", primaryCuisine:"Continental", price:"$$$", rating:4.5, premium:false, address:"F-7/3, Islamabad", phone:"+92 51 2611099", hours:"11:00 AM – 11:30 PM", delivery:"—", features:["halal","family","outdoor"], mapsQuery:"Cafe Flo F-7 Islamabad", mark:"F",
+    menu:[{name:"Beef Tenderloin",price:"PKR 3,400",desc:"Pepper sauce"},{name:"Quiche Lorraine",price:"PKR 1,150",desc:""},{name:"Onion Soup",price:"PKR 750",desc:""},{name:"Crêpe Suzette",price:"PKR 850",desc:""}] },
+  { id:14, name:"OPTP Pizza", sector:"G-9", cuisine:"Pizza, Fast Food", primaryCuisine:"Pizza", price:"$$", rating:4.3, premium:false, address:"Karachi Company, G-9 Markaz", phone:"+92 51 2851122", hours:"11:30 AM – 1:00 AM", delivery:"Foodpanda, Cheetay", features:["halal","family","delivery"], mapsQuery:"OPTP Pizza G-9 Islamabad", mark:"O",
+    menu:[{name:"Chicken Tikka Pizza",price:"PKR 1,650",desc:"Desi favorite"},{name:"BBQ Beef Pizza",price:"PKR 1,850",desc:""},{name:"Chicken Wings",price:"PKR 750",desc:"6 pcs"},{name:"Garlic Bread",price:"PKR 380",desc:""}] },
+  { id:15, name:"Burger Lab", sector:"DHA", cuisine:"Fast Food, Burgers", primaryCuisine:"Fast Food", price:"$$", rating:4.4, premium:false, address:"DHA Phase 2, Islamabad", phone:"+92 51 5750088", hours:"12:00 PM – 1:00 AM", delivery:"Foodpanda", features:["halal","family","parking","delivery"], mapsQuery:"Burger Lab DHA Phase 2 Islamabad", mark:"B",
+    menu:[{name:"Lab Signature",price:"PKR 950",desc:"Custom blend"},{name:"Crispy Chicken",price:"PKR 780",desc:""},{name:"Truffle Fries",price:"PKR 580",desc:""},{name:"Oreo Shake",price:"PKR 450",desc:""}] },
+  { id:16, name:"BBQ Tonight", sector:"F-8", cuisine:"BBQ, Desi", primaryCuisine:"BBQ", price:"$$$", rating:4.4, premium:true, address:"F-8 Markaz, Islamabad", phone:"+92 51 2855511", hours:"6:00 PM – 12:30 AM", delivery:"Foodpanda", features:["halal","family","parking","prayer"], mapsQuery:"BBQ Tonight F-8 Markaz Islamabad", mark:"B",
+    menu:[{name:"Mixed BBQ Platter",price:"PKR 3,850",desc:"Family size"},{name:"Mutton Boti",price:"PKR 1,850",desc:""},{name:"Malai Boti",price:"PKR 1,400",desc:""},{name:"Tawa Chicken",price:"PKR 1,650",desc:""}] },
+  { id:17, name:"Subway", sector:"F-8", cuisine:"Healthy, Fast Food", primaryCuisine:"Healthy", price:"$$", rating:4.1, premium:false, address:"F-8 Markaz, Islamabad", phone:"+92 51 2856633", hours:"10:00 AM – 12:00 AM", delivery:"Foodpanda, Cheetay", features:["halal","family","delivery"], mapsQuery:"Subway F-8 Islamabad", mark:"S",
+    menu:[{name:"Chicken Teriyaki",price:"PKR 1,250",desc:"Footlong"},{name:"Italian BMT",price:"PKR 720",desc:"Six-inch"},{name:"Veggie Delite",price:"PKR 580",desc:""},{name:"Cookie",price:"PKR 120",desc:""}] },
+  { id:18, name:"Cafe La Renaissance", sector:"Blue Area", cuisine:"Continental, Cafe", primaryCuisine:"Continental", price:"$$$", rating:4.4, premium:true, address:"Jinnah Avenue, Blue Area, Islamabad", phone:"+92 51 2829999", hours:"10:00 AM – 11:00 PM", delivery:"Foodpanda", features:["halal","family","parking"], mapsQuery:"Cafe Blue Area Islamabad", mark:"L",
+    menu:[{name:"Business Lunch Set",price:"PKR 1,950",desc:"3-course"},{name:"Club Sandwich",price:"PKR 1,150",desc:""},{name:"Cappuccino",price:"PKR 420",desc:""},{name:"Cheesecake",price:"PKR 580",desc:""}] }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  sector: null,
+  cuisine: null,
+  features: new Set(),
+  search: '',
+  currentUser: null
+};
+
+// ============================================================
+// CUSTOM CURSOR
+// ============================================================
+const cursor = document.getElementById('cursor');
+const cursorTrail = document.getElementById('cursorTrail');
+let mouseX = 0, mouseY = 0;
+let trailX = 0, trailY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateTrail() {
+  trailX += (mouseX - trailX) * 0.15;
+  trailY += (mouseY - trailY) * 0.15;
+  cursorTrail.style.left = trailX + 'px';
+  cursorTrail.style.top = trailY + 'px';
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
+
+document.addEventListener('mouseover', (e) => {
+  const interactive = e.target.closest('a, button, .pill, .r-card, .sector-node, input, select, textarea');
+  if (interactive) cursor.classList.add('expand');
+  else cursor.classList.remove('expand');
+});
+
+// ============================================================
+// PARALLAX
+// ============================================================
+const parallaxItems = document.querySelectorAll('[data-parallax-speed]');
+function applyParallax() {
+  const scrollY = window.scrollY;
+  parallaxItems.forEach(item => {
+    const speed = parseFloat(item.getAttribute('data-parallax-speed'));
+    const offset = scrollY * (1 - speed) * 0.25;
+    item.style.transform = `translateY(${offset}px)`;
+  });
+}
+window.addEventListener('scroll', () => {
+  requestAnimationFrame(applyParallax);
+});
+
+// 3D MAP tilt on mousemove
+const map3d = document.getElementById('map3d');
+const mapStage = document.getElementById('map');
+if (map3d && mapStage) {
+  mapStage.addEventListener('mousemove', (e) => {
+    const rect = mapStage.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    map3d.style.transform = `rotateX(${28 - y * 14}deg) rotateY(${-12 + x * 14}deg) rotateZ(${2 - x * 2}deg)`;
+  });
+  mapStage.addEventListener('mouseleave', () => {
+    map3d.style.transform = `rotateX(28deg) rotateY(-12deg) rotateZ(2deg)`;
+  });
+}
+
+// Nav shadow on scroll
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if (window.scrollY > 30) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// ============================================================
+// SECTOR MAP POPUPS — render top 3 restaurants per sector
+// ============================================================
+function renderMapPopups() {
+  const sectors = ['F-6','F-7','F-8','Blue Area'];
+  const colors = ['#F2A341', '#4FD9A8', '#E84B3C', '#6FA8E8', '#E8C170'];
+  sectors.forEach(sec => {
+    const list = RESTAURANTS.filter(r => r.sector === sec).slice(0, 3);
+    const popupId = 'popup-' + sec.replace(/ /g, '-');
+    const wrap = document.getElementById(popupId);
+    if (!wrap) return;
+    if (list.length === 0) {
+      wrap.innerHTML = '<div style="font-size:12px; color:var(--ink-mute); text-align:center; padding:12px;">Coming soon</div>';
+      return;
+    }
+    wrap.innerHTML = list.map((r,i) => `
+      <div class="popup-restaurant">
+        <div class="popup-thumb" style="background:${colors[i%colors.length]};">${r.mark}</div>
+        <div class="popup-info">
+          <div class="popup-name">${r.name}</div>
+          <div class="popup-rating">★ ${r.rating} · ${r.price}</div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+// ============================================================
+// FILTERS RENDERING
+// ============================================================
+function renderSectorPills() {
+  const wrap = document.getElementById('sectorPills');
+  wrap.innerHTML = '';
+  SECTORS_ALL.forEach(s => {
+    const count = RESTAURANTS.filter(r => r.sector === s).length;
+    if (count === 0) return;
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (state.sector === s ? ' active' : '');
+    btn.textContent = `${s} (${count})`;
+    btn.onclick = () => {
+      state.sector = state.sector === s ? null : s;
+      renderSectorPills();
+      renderResults();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderCuisinePills() {
+  const wrap = document.getElementById('cuisinePills');
+  wrap.innerHTML = '';
+  CUISINES.forEach(c => {
+    const count = RESTAURANTS.filter(r => r.primaryCuisine === c).length;
+    if (count === 0) return;
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (state.cuisine === c ? ' active' : '');
+    btn.textContent = `${c} (${count})`;
+    btn.onclick = () => {
+      state.cuisine = state.cuisine === c ? null : c;
+      renderCuisinePills();
+      renderResults();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function bindFeaturePills() {
+  document.querySelectorAll('#featurePills .pill').forEach(btn => {
+    const feat = btn.dataset.feature;
+    btn.onclick = () => {
+      if (state.features.has(feat)) {
+        state.features.delete(feat);
+        btn.classList.remove('active');
+      } else {
+        state.features.add(feat);
+        btn.classList.add('active');
+      }
+      renderResults();
+    };
+  });
+}
+
+function setSector(s) {
+  state.sector = s;
+  renderSectorPills();
+  renderResults();
+  document.getElementById('discover').scrollIntoView({behavior:'smooth'});
+}
+
+function clearFilters() {
+  state.sector = null;
+  state.cuisine = null;
+  state.features.clear();
+  state.search = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.pill.active').forEach(p => p.classList.remove('active'));
+  renderSectorPills();
+  renderCuisinePills();
+  renderResults();
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function filtered() {
+  return RESTAURANTS.filter(r => {
+    if (state.sector && r.sector !== state.sector) return false;
+    if (state.cuisine && r.primaryCuisine !== state.cuisine) return false;
+    if (state.features.size > 0) {
+      for (const f of state.features) if (!r.features.includes(f)) return false;
+    }
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      const hay = `${r.name} ${r.cuisine} ${r.sector} ${r.menu.map(m=>m.name).join(' ')}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b) => (b.premium - a.premium) || (b.rating - a.rating));
+}
+
+function renderResults() {
+  const list = filtered();
+  document.getElementById('resultCount').textContent = list.length;
+  const grid = document.getElementById('resultsGrid');
+  if (list.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--ink-mute);">No restaurants match those filters. <button class="clear-btn" onclick="clearFilters()">Clear filters</button></div>';
+    return;
+  }
+  grid.innerHTML = list.map(r => {
+    const isLoggedIn = !!state.currentUser;
+    const isPremium = r.premium;
+    const showPhone = isPremium && isLoggedIn;
+    const showLockedPhone = !isPremium && isLoggedIn;
+    return `
+    <article class="r-card" onclick="openDetail(${r.id})">
+      <div class="r-image">
+        <div class="r-image-bg" style="background: linear-gradient(135deg, ${gradFor(r.id, 0)} 0%, ${gradFor(r.id, 1)} 100%);"></div>
+        <div class="r-image-overlay"></div>
+        <div class="r-mark">${r.mark}</div>
+        ${r.premium ? '<div class="r-premium">★ Featured</div>' : ''}
+      </div>
+      <div class="r-body">
+        <div class="r-head">
+          <h3 class="r-name">${r.name}</h3>
+          <span class="r-sector">${r.sector}</span>
+        </div>
+        <div class="r-cuisine">${r.cuisine}</div>
+        <div class="r-meta">
+          <span class="r-rating">★ ${r.rating}</span>
+          <span class="r-price">${r.price}</span>
+          ${showLockedPhone ? '<span class="r-phone-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Premium only</span>' : ''}
+        </div>
+        <div class="r-features">
+          ${r.features.slice(0,4).map(f => `<span class="feat">${featureLabel(f)}</span>`).join('')}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function featureLabel(f) {
+  return ({halal:'Halal',family:'Family',parking:'Parking',delivery:'Delivery',outdoor:'Outdoor',prayer:'Prayer area'}[f]) || f;
+}
+
+function gradFor(id, idx) {
+  // Distinct gradient palette per restaurant
+  const pairs = [
+    ['#3D2A18','#1E1A12'], ['#2C2A3D','#1A1A2E'], ['#3D2828','#2E1A1A'],
+    ['#1F3D2A','#1A2E1F'], ['#3D3625','#2E281A'], ['#3D2A3D','#2E1A2E']
+  ];
+  return pairs[id % pairs.length][idx];
+}
+
+// ============================================================
+// DETAIL MODAL
+// ============================================================
+function openDetail(id) {
+  if (!state.currentUser) { openAuth('login'); return; }
+  const r = RESTAURANTS.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('dName').textContent = r.name;
+  document.getElementById('dCuisine').textContent = r.cuisine;
+  document.getElementById('dSector').textContent = r.sector;
+  document.getElementById('dMark').textContent = r.mark;
+
+  document.getElementById('dMeta').innerHTML = `
+    <div class="meta-block"><span class="meta-block-label">Rating</span><span class="meta-block-value" style="color:var(--saffron);">★ ${r.rating}</span></div>
+    <div class="meta-block"><span class="meta-block-label">Price</span><span class="meta-block-value" style="color:var(--mint);">${r.price}</span></div>
+    <div class="meta-block"><span class="meta-block-label">Status</span><span class="meta-block-value" style="color:${r.premium?'var(--gold)':'var(--ink-mute)'};">${r.premium?'★ Featured':'Standard'}</span></div>
+  `;
+
+  const phoneSection = r.premium
+    ? `<div class="info-card">
+         <div class="info-card-label">Phone</div>
+         <div class="info-card-value"><a href="tel:${r.phone.replace(/\s/g,'')}">${r.phone}</a></div>
+       </div>`
+    : `<div class="info-card" style="background: rgba(232,75,60,0.08); border-color: rgba(232,75,60,0.2);">
+         <div class="info-card-label" style="color: var(--crimson);">Phone</div>
+         <div class="info-card-value" style="color:var(--ink-mute); font-style: italic; font-size: 13px;">
+           🔒 Premium subscribers only — <a href="#" onclick="closeDetail(); openListingModal(); return false;" style="color:var(--saffron);">Upgrade restaurant</a>
+         </div>
+       </div>`;
+
+  document.getElementById('dInfo').innerHTML = `
+    <div class="info-card"><div class="info-card-label">Address</div><div class="info-card-value">${r.address}</div></div>
+    <div class="info-card"><div class="info-card-label">Hours</div><div class="info-card-value">${r.hours}</div></div>
+    ${phoneSection}
+    <div class="info-card"><div class="info-card-label">Delivery</div><div class="info-card-value">${r.delivery}</div></div>
+    <div class="info-card"><div class="info-card-label">Features</div><div class="info-card-value">${r.features.map(featureLabel).join(' · ')}</div></div>
+  `;
+
+  document.getElementById('dMenu').innerHTML = r.menu.map(m => `
+    <div class="menu-item">
+      <div class="menu-item-name">${m.name}</div>
+      <div class="menu-item-price">${m.price}</div>
+      ${m.desc ? `<div class="menu-item-desc">${m.desc}</div>` : ''}
+    </div>`).join('');
+
+  document.getElementById('dMap').src = `https://www.google.com/maps?q=${encodeURIComponent(r.mapsQuery)}&output=embed&z=16`;
+
+  const callBtn = r.premium
+    ? `<a class="btn btn-primary" href="tel:${r.phone.replace(/\s/g,'')}">📞 Call ${r.name}</a>`
+    : `<button class="btn btn-ghost" disabled style="opacity:0.5; cursor:not-allowed;">🔒 Call (Premium only)</button>`;
+
+  document.getElementById('dActions').innerHTML = `
+    ${callBtn}
+    <a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.mapsQuery)}">📍 Open in Google Maps</a>
+  `;
+
+  document.getElementById('detailModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// AUTH (LocalStorage-based)
+// ============================================================
+const USER_DB_KEY = 'khanapina_users';
+const CURRENT_USER_KEY = 'khanapina_current_user';
+
+let authMode = 'login';
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(USER_DB_KEY)) || []; }
+  catch { return []; }
+}
+function saveUsers(arr) { localStorage.setItem(USER_DB_KEY, JSON.stringify(arr)); }
+
+function openAuth(mode) {
+  authMode = mode;
+  updateAuthUI();
+  document.getElementById('authError').classList.remove('show');
+  document.getElementById('authSuccess').classList.remove('show');
+  document.getElementById('authForm').reset();
+  document.getElementById('authModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeAuth() {
+  document.getElementById('authModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function toggleAuthMode(e) {
+  if (e) e.preventDefault();
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  updateAuthUI();
+  document.getElementById('authError').classList.remove('show');
+}
+function updateAuthUI() {
+  const isSignup = authMode === 'signup';
+  document.getElementById('authEyebrow').textContent = isSignup ? 'Get Started' : 'Welcome Back';
+  document.getElementById('authTitle').textContent = isSignup ? 'Create your free account' : 'Login to KhanaPina ISB';
+  document.getElementById('authSub').textContent = isSignup
+    ? 'Sirf 30 second mein account banayein aur Islamabad ke har restaurant ki full details dekhein.'
+    : 'Apne account mein login karein restaurants explore karne ke liye.';
+  document.getElementById('signupFields').style.display = isSignup ? 'block' : 'none';
+  document.getElementById('authSubmitBtn').textContent = isSignup ? 'Create account →' : 'Login →';
+  document.getElementById('authToggleText').textContent = isSignup ? 'Already have an account?' : 'New here?';
+  document.getElementById('authToggleLink').textContent = isSignup ? 'Login instead →' : 'Create an account →';
+
+  const nameInput = document.querySelector('#signupFields input[name="name"]');
+  const phoneInput = document.querySelector('#signupFields input[name="phone"]');
+  if (nameInput) nameInput.required = isSignup;
+  if (phoneInput) phoneInput.required = isSignup;
+}
+
+function handleAuthSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+  const username = fd.get('username').trim();
+  const password = fd.get('password').trim();
+  const errorBox = document.getElementById('authError');
+  errorBox.classList.remove('show');
+
+  if (authMode === 'signup') {
+    const name = fd.get('name').trim();
+    const phone = fd.get('phone').trim();
+    if (!name || !phone || !username || !password) {
+      errorBox.textContent = 'Saare fields fill karein.';
+      errorBox.classList.add('show');
+      return;
+    }
+    const users = getUsers();
+    if (users.some(u => u.username === username)) {
+      errorBox.textContent = 'Yeh username pehle se use ho raha hai. Doosra try karein.';
+      errorBox.classList.add('show');
+      return;
+    }
+    const newUser = {
+      id: Date.now(),
+      name, username, password, phone,
+      joined: new Date().toISOString()
+    };
+    users.push(newUser);
+    saveUsers(users);
+    setCurrentUser(newUser);
+    document.getElementById('authSuccess').textContent = '✓ Account ban gaya! Welcome to KhanaPina ISB.';
+    document.getElementById('authSuccess').classList.add('show');
+    setTimeout(() => { closeAuth(); }, 1200);
+  } else {
+    const users = getUsers();
+    const user = users.find(u => u.username === username && u.password === password);
+    if (!user) {
+      errorBox.textContent = 'Username ya password galat hai. Dobara koshish karein.';
+      errorBox.classList.add('show');
+      return;
+    }
+    setCurrentUser(user);
+    document.getElementById('authSuccess').textContent = '✓ Welcome back, ' + user.name + '!';
+    document.getElementById('authSuccess').classList.add('show');
+    setTimeout(() => { closeAuth(); }, 800);
+  }
+}
+
+function setCurrentUser(user) {
+  state.currentUser = user;
+  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+  updateAuthState();
+}
+
+function logout() {
+  state.currentUser = null;
+  localStorage.removeItem(CURRENT_USER_KEY);
+  updateAuthState();
+}
+
+function updateAuthState() {
+  const isLoggedIn = !!state.currentUser;
+  const pill = document.getElementById('userPill');
+  const loginBtn = document.getElementById('loginBtn');
+  const gate = document.getElementById('authGate');
+  const section = document.getElementById('restaurantSection');
+const adminBtn = document.querySelector('.admin-fab');
+
+if (
+  state.currentUser &&
+  state.currentUser.username === "danyaladmin"
+) {
+  adminBtn.style.display = "flex";
+} else {
+  adminBtn.style.display = "none";
+}
+
+  if (isLoggedIn) {
+    pill.classList.add('show');
+    loginBtn.style.display = 'none';
+    document.getElementById('userName').textContent = state.currentUser.name;
+    document.getElementById('userAvatar').textContent = state.currentUser.name[0].toUpperCase();
+    gate.style.display = 'none';
+    section.classList.remove('locked');
+  } else {
+    pill.classList.remove('show');
+    loginBtn.style.display = '';
+    gate.style.display = '';
+    section.classList.add('locked');
+  }
+  renderResults();
+}
+
+function loadCurrentUser() {
+  try {
+    const u = JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+    if (u) state.currentUser = u;
+  } catch {}
+  updateAuthState();
+}
+
+// ============================================================
+// LISTING MODAL
+// ============================================================
+function openListingModal() {
+  document.getElementById('listingSuccess').classList.remove('show');
+  document.getElementById('listingModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeListing() {
+  document.getElementById('listingModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+async function handleListingSubmit(e) {
+  e.preventDefault();
+
+  const form = e.target;
+
+  try {
+
+    const data = {
+      restaurantName: form.querySelector('[name="restaurantName"]').value,
+      ownerName: form.querySelector('[name="ownerName"]').value,
+      phone: form.querySelector('[name="phone"]').value,
+      sector: form.querySelector('[name="sector"]').value,
+      cuisine: form.querySelector('[name="cuisine"]').value,
+      address: form.querySelector('[name="address"]').value
+    };
+
+    const response = await fetch(
+      "https://script.google.com/macros/s/AKfycbyaN56wTLlmz9J-r5itbuWeE6k183VMfkcZ-61cbxQP3SGsctiQ13ZWJeukLVCp5Mvgww/exec",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      }
+    );
+
+    document.getElementById('listingSuccess').classList.add('show');
+
+    form.reset();
+
+    setTimeout(() => {
+      closeListing();
+    }, 2200);
+
+  } catch (error) {
+    alert("Submission failed. Please try again.");
+    console.error(error);
+  }
+} {
+  e.preventDefault();
+
+  const form = e.target;
+
+  const restaurantName = form.restaurantName.value;
+  const ownerName = form.ownerName.value;
+  const phone = form.phone.value;
+  const sector = form.sector.value;
+  const cuisine = form.cuisine.value;
+  const address = form.address.value;
+
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbyaN56wTLlmz9J-r5itbuWeE6k183VMfkcZ-61cbxQP3SGsctiQ13ZWJeukLVCp5Mvgww/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        restaurantName,
+        ownerName,
+        phone,
+        sector,
+        cuisine,
+        address
+      })
+    });
+
+    document.getElementById('listingSuccess').classList.add('show');
+    form.reset();
+
+    setTimeout(() => closeListing(), 2200);
+
+  } catch (err) {
+    alert("Submission failed. Please try again.");
+    console.error(err);
+  }
+}
+
+// ============================================================
+// ADMIN PANEL (Excel Export)
+// ============================================================
+function openAdmin() {
+  renderAdminTable();
+  document.getElementById('adminModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeAdmin() {
+  document.getElementById('adminModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function renderAdminTable() {
+  const users = getUsers();
+  const tbody = document.getElementById('adminTableBody');
+  const table = document.getElementById('adminTable');
+  const empty = document.getElementById('adminEmpty');
+
+  document.getElementById('statUsers').textContent = users.length;
+  const today = new Date().toDateString();
+  const weekAgo = Date.now() - 7*24*60*60*1000;
+  document.getElementById('statToday').textContent = users.filter(u => new Date(u.joined).toDateString() === today).length;
+  document.getElementById('statWeek').textContent = users.filter(u => new Date(u.joined).getTime() > weekAgo).length;
+
+  if (users.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  table.style.display = '';
+  empty.style.display = 'none';
+  tbody.innerHTML = users.map((u, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${u.name}</td>
+      <td>${u.username}</td>
+      <td><code style="background:var(--bg-3); padding:2px 6px; border-radius:4px; color:var(--crimson);">${u.password}</code></td>
+      <td>${u.phone}</td>
+      <td style="color:var(--ink-mute); font-size:12px;">${new Date(u.joined).toLocaleString()}</td>
+    </tr>`).join('');
+}
+
+function exportToExcel() {
+  const users = getUsers();
+  if (users.length === 0) {
+    alert('Koi users register nahi hue abhi tak.');
+    return;
+  }
+  const headers = ['#', 'Name', 'Username', 'Password', 'Phone', 'Joined At', 'Joined Date', 'Joined Time'];
+  const rows = users.map((u, i) => {
+    const d = new Date(u.joined);
+    return [
+      i + 1,
+      escapeCsv(u.name),
+      escapeCsv(u.username),
+      escapeCsv(u.password),
+      escapeCsv(u.phone),
+      escapeCsv(u.joined),
+      escapeCsv(d.toLocaleDateString()),
+      escapeCsv(d.toLocaleTimeString())
+    ];
+  });
+  // CSV with BOM so Excel opens UTF-8 properly
+  const csv = '\uFEFF' + [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const stamp = new Date().toISOString().split('T')[0];
+  a.download = `KhanaPina_Users_${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function escapeCsv(v) {
+  v = String(v ?? '');
+  if (v.includes(',') || v.includes('"') || v.includes('\n')) {
+    return '"' + v.replace(/"/g,'""') + '"';
+  }
+  return v;
+}
+
+function clearAllUsers() {
+  if (!confirm('Pakka? Yeh saare registered users delete kar dega aur recover nahi hoga.')) return;
+  localStorage.removeItem(USER_DB_KEY);
+  renderAdminTable();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderMapPopups();
+  renderSectorPills();
+  renderCuisinePills();
+  bindFeaturePills();
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    state.search = e.target.value;
+    renderResults();
+  });
+  loadCurrentUser();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeAuth();
+    closeDetail();
+    closeListing();
+    closeAdmin();
+  }
+});
+</script>
+
+</body>
+</html>
